@@ -98,8 +98,8 @@ for idx, b in enumerate(packer.bins):
     painter = Painter(b)
     fig = painter.plotBoxAndItems(
         title=b.partno,
-        alpha=0.8,
-        write_num=False,
+        alpha=0.2,
+        write_num=True,
         fontsize=10
     )
 

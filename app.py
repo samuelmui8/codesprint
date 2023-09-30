@@ -3,6 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import random
 import csv
+from PIL import Image
 
 st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
 
@@ -111,6 +112,9 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
+        fig_name = "fig{index}.png".format(index=idx)
+        fig.savefig(fig_name)
+        st.image(Image.open(fig_name))
 
     output += "***************************************************\n"
     output += "UNFITTED ITEMS:\n"
@@ -131,4 +135,4 @@ if uploaded_file is not None:
     print(output)
 
     st.title("Streamlit App")
-    st.pyplot(fig)
+    #st.pyplot(fig)
