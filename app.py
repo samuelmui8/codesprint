@@ -2,10 +2,10 @@ import subprocess
 
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
-import matplotlib.pyplot as plt
 import random
 import csv
-from PIL import Image
+import pandas as pd
+import subprocess
 
 
 def run_python_file(file_path):
@@ -17,6 +17,7 @@ def run_python_file(file_path):
         st.error(f"Error executing '{file_path}': {e}")
 
 st.set_page_config(page_title="Codesprint 3D Bin Packer", page_icon=":smiley:")
+
 st.title("Codesprint 3D Bin Packer")
 uploaded_file = st.file_uploader("Choose a file")
 if st.button("Open interactive view"):
@@ -137,23 +138,81 @@ if uploaded_file is not None:
             st.image(Image.open(fig_name))
 
 
-        output += "***************************************************\n"
-        output += "UNFITTED ITEMS:\n"
-        for item in packer.unfit_items:
-            volume_f += float(item.width) * \
-                float(item.height) * float(item.depth)
-            unfitted_name += f'{item.partno}, '
-        if len(packer.unfit_items) == 0:
-            unfitted_name = "None"
-        else:
-            unfitted_name = unfitted_name[:-2]
-        output += "***************************************************\n"
-        output += f'Unpacked package no: {unfitted_name}\n'
-        output += f'Unpacked package volume : {volume_f}\n'
 
-        # Print the entire output
-        print(output)
-        st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
-        st.text("Packing information:")
-        st.text(output)
+    st.title("Packing information:")
+
+    for idx, b in enumerate(packer.bins):
+
+        st.header(f"{b.string()} \n")
+        bins_used += 1
+        current_bin_weight = 0
+
+        volume = b.width * b.height * b.depth
+        volume_t = 0
+        volume_f = 0
+        unfitted_name = ''
+        data = {
+            "Package no": [],
+            "Dimensions / meters": [],
+            "Weight / kg": []
+        }
+        for item in b.items:
+            current_bin_weight += float(item.weight)
+
+            data["Package no"].append(item.partno)
+            data["Dimensions / meters"].append(
+                f"{item.width} x {item.height} x {item.depth}")
+            data["Weight / kg"].append(item.weight)
+            volume_t += float(item.width) * \
+                float(item.height) * float(item.depth)
+        data1 = {
+            "Space utilization": [],
+            "Total weight of items / kg": [],
+            "Residual volume": []
+        }
+        data1["Space utilization"].append(
+            f'{round(volume_t / float(volume) * 100, 2)}%')
+        data1["Total weight of items / kg"].append(current_bin_weight)
+        data1["Residual volume"].append(float(volume) - volume_t)
+
+        # draw results
+        painter = Painter(b)
+        fig = painter.plotBoxAndItems(
+            title=b.partno,
+            alpha=0.8,
+            write_num=False,
+            fontsize=10
+        )
+
+        df = pd.DataFrame(data)
+        df1 = pd.DataFrame(data1)
+        df.index += 1
+        st.pyplot(fig)
+        st.subheader("FITTED ITEMS")
+        st.table(df)
+        st.table(df1)
+
+    unfitted_items = {
+        "Package no": [],
+        "Dimensions / meters": [],
+        "Weight / kg": []
+    }
+    for item in packer.unfit_items:
+        unfitted_items["Package no"].append(item.partno)
+        unfitted_items["Dimensions / meters"].append(
+            f"{item.width} x {item.height} x {item.depth}")
+        unfitted_items["Weight / kg"].append(item.weight)
+    if len(packer.unfit_items) == 0:
+        unfitted_name = "None"
+    else:
+        unfitted_name = unfitted_name[:-2]
+
+    # Print the entire output
+    st.header("Summary:")
+    st.subheader("Total Containers utilised: " +
+                 str(bins_used) + "/" + str(len(bins)))
+    st.subheader("Unpacked Items:")
+    unfitted_items = pd.DataFrame(unfitted_items)
+    unfitted_items.index += 1
+    st.table(unfitted_items)
 
