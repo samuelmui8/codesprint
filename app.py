@@ -83,11 +83,8 @@ if uploaded_file is not None:
         number_of_decimals=0
     )
 
-
-
     # put order
     packer.putOrder()
-
 
     st.title("Packing information:")
 
@@ -143,7 +140,7 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
-        
+
         df = pd.DataFrame(data)
         df1 = pd.DataFrame(data1)
         df.index += 1
@@ -175,12 +172,3 @@ if uploaded_file is not None:
     unfitted_items.index += 1
     st.table(unfitted_items)
     # st.pyplot(fig)
-
-
-
-    fig_name = "fig{index}.png".format(index=idx)
-    fig.savefig(fig_name)
-    st.image(Image.open(fig_name))
-
-
-   
