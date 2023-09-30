@@ -5,7 +5,8 @@ import random
 import csv
 from app import uploaded_file
 
-
+seed_value = 42
+random.seed(seed_value)
 COLORS = ["yellow", "olive", "pink", "brown", "red",
           "blue", "green", "purple", "orange", "gray"]
 
