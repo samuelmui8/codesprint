@@ -5,8 +5,9 @@ import random
 import csv
 from PIL import Image
 
-st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
 
+st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
+st.title("Codesprint 3D Bin Packer")
 uploaded_file = st.file_uploader("Choose a file")
 
 
@@ -133,6 +134,6 @@ if uploaded_file is not None:
 
     # Print the entire output
     print(output)
-
-    st.title("Streamlit App")
+    st.text("Packing information:")
+    st.text(output)
     #st.pyplot(fig)
