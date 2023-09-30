@@ -134,7 +134,7 @@ if uploaded_file is not None:
                 fontsize=10
             )
 
-            st.pyplot(fig)
+
 
 
 
