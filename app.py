@@ -1,15 +1,29 @@
+import subprocess
+
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
 import matplotlib.pyplot as plt
 import random
 import csv
 from PIL import Image
+from saved_fig import FIG
 
+def run_python_file(file_path):
+    try:
+        with open("data.csv", "wb") as f:
+            f.write(uploaded_file.read())
+        # Execute the Python file using subprocess
+        subprocess.run(["python", file_path], check=True)
+        st.success(f"Python file '{file_path}' executed successfully.")
+    except Exception as e:
+        st.error(f"Error executing '{file_path}': {e}")
 
 st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
 st.title("Codesprint 3D Bin Packer")
 uploaded_file = st.file_uploader("Choose a file")
-
+if st.button("Open interactive view"):
+    file_path = "interactiveplot.py"  # Replace with the path to your Python file
+    run_python_file(file_path)
 
 COLORS = ["yellow", "olive", "pink", "brown", "red",
           "blue", "green", "purple", "orange", "gray"]
@@ -27,6 +41,8 @@ if uploaded_file is not None:
     # Use uploaded file content instead of hardcoded path
     uploaded_data = uploaded_file.read().decode('utf-8').splitlines()
     csv_reader = csv.reader(uploaded_data)
+
+
     # Iterate through the rows and parse bins and items
     for row in csv_reader:
         # Check if the row is empty
@@ -118,9 +134,11 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
+        FIG = fig
         fig_name = "fig{index}.png".format(index=idx)
         fig.savefig(fig_name)
         st.image(Image.open(fig_name))
+
 
     output += "***************************************************\n"
     output += "UNFITTED ITEMS:\n"
@@ -141,4 +159,4 @@ if uploaded_file is not None:
     st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
     st.text("Packing information:")
     st.text(output)
-    # st.pyplot(fig)
+
