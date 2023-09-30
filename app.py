@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import random
 import csv
 from PIL import Image
-from saved_fig import FIG
+
 
 def run_python_file(file_path):
     try:
@@ -134,7 +134,6 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
-        FIG = fig
         fig_name = "fig{index}.png".format(index=idx)
         fig.savefig(fig_name)
         st.image(Image.open(fig_name))
