@@ -1,9 +1,8 @@
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
-import matplotlib.pyplot as plt
 import random
 import csv
-from PIL import Image
+import pandas as pd
 
 
 st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
@@ -85,31 +84,35 @@ if uploaded_file is not None:
 
     # put order
     packer.putOrder()
-
-    output = "***************************************************\n"
     for idx, b in enumerate(packer.bins):
-        output += f"** {b.string()} **\n"
         bins_used += 1
         current_bin_weight = 0
-        output += "***************************************************\n"
-        output += "FITTED ITEMS:\n"
-        output += "***************************************************\n"
         volume = b.width * b.height * b.depth
         volume_t = 0
         volume_f = 0
         unfitted_name = ''
+        data = {
+            "Package no": [],
+            "Dimensions / meters": [],
+            "Weight / kg": []
+        }
         for item in b.items:
             current_bin_weight += float(item.weight)
-            output += f"Package no: {item.partno}, "
-            output += f"Dimensions : {item.width} x {item.height} x {item.depth}, "
-            output += f"Weight : {item.weight}\n"
+            data["Package no"].append(item.partno)
+            data["Dimensions / meters"].append(
+                f"{item.width} x {item.height} x {item.depth}")
+            data["Weight / kg"].append(item.weight)
             volume_t += float(item.width) * \
                 float(item.height) * float(item.depth)
-
-        output += f'Space utilization : {round(volume_t / float(volume) * 100, 2)}%\n'
-        output += f'Total weight of items: {current_bin_weight}\n'
-        output += f'Residual volume : {float(volume) - volume_t}\n'
-        output += "***************************************************\n"
+        data1 = {
+            "Space utilization": [],
+            "Total weight of items": [],
+            "Residual volume": []
+        }
+        data1["Space utilization"].append(
+            f'{round(volume_t / float(volume) * 100, 2)}%')
+        data1["Total weight of items"].append(current_bin_weight)
+        data1["Residual volume"].append(float(volume) - volume_t)
         # draw results
         painter = Painter(b)
         fig = painter.plotBoxAndItems(
@@ -118,27 +121,34 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
-        fig_name = "fig{index}.png".format(index=idx)
-        fig.savefig(fig_name)
-        st.image(Image.open(fig_name))
+        df = pd.DataFrame(data)
+        df1 = pd.DataFrame(data1)
+        df.index += 1
+        st.pyplot(fig)
+        st.table(df)
+        st.table(df1)
 
-    output += "***************************************************\n"
-    output += "UNFITTED ITEMS:\n"
+    unfitted_items = {
+        "Package no": [],
+        "Dimensions / meters": [],
+        "Weight / kg": []
+    }
     for item in packer.unfit_items:
-        volume_f += float(item.width) * \
-            float(item.height) * float(item.depth)
-        unfitted_name += f'{item.partno}, '
+        unfitted_items["Package no"].append(item.partno)
+        unfitted_items["Dimensions / meters"].append(
+            f"{item.width} x {item.height} x {item.depth}")
+        unfitted_items["Weight / kg"].append(item.weight)
     if len(packer.unfit_items) == 0:
         unfitted_name = "None"
     else:
         unfitted_name = unfitted_name[:-2]
-    output += "***************************************************\n"
-    output += f'Unpacked package no: {unfitted_name}\n'
-    output += f'Unpacked package volume : {volume_f}\n'
 
     # Print the entire output
-    print(output)
-    st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
-    st.text("Packing information:")
-    st.text(output)
+    st.header("Summary:")
+    st.subheader("Total Containers utilised: " +
+                 str(bins_used) + "/" + str(len(bins)))
+    st.subheader("Unpacked Items:")
+    unfitted_items = pd.DataFrame(unfitted_items)
+    unfitted_items.index += 1
+    st.table(unfitted_items)
     # st.pyplot(fig)
