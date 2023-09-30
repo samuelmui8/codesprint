@@ -5,11 +5,10 @@ import csv
 import pandas as pd
 import subprocess
 
-st.set_page_config(page_title="Streamlit App", page_icon=":smiley:", layout="wide")
-col1, col2 = st.columns((1,2))
-with col1:
-    st.title("Codesprint 3D Bin Packer")
-    uploaded_file = st.file_uploader("Choose a file")
+st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
+
+st.title("Codesprint 3D Bin Packer")
+uploaded_file = st.file_uploader("Choose a file")
 
 
 COLORS = ["yellow", "olive", "pink", "brown", "red",
@@ -89,21 +88,21 @@ if uploaded_file is not None:
     # put order
     packer.putOrder()
 
-    with col1:
-        st.title("Packing information:")
+
+    st.title("Packing information:")
 
     # output = "***************************************************\n"
     # output = ''
     for idx, b in enumerate(packer.bins):
         # output += f"** {b.string()} **\n"
-        with col1:
-            st.header(f"{b.string()} \n")
+
+        st.header(f"{b.string()} \n")
         bins_used += 1
         current_bin_weight = 0
         # output = f"{b.string()} \n"
         # output += "***************************************************\n"
-        with col1:
-            st.subheader("FITTED ITEMS")
+
+        st.subheader("FITTED ITEMS")
         output = ""
         # output += "***************************************************\n"
         volume = b.width * b.height * b.depth
@@ -135,8 +134,8 @@ if uploaded_file is not None:
         data1["Residual volume"].append(float(volume) - volume_t)
 
         # draw results
-        with col1:
-            st.markdown(output)
+
+        st.markdown(output)
         painter = Painter(b)
         fig = painter.plotBoxAndItems(
             title=b.partno,
@@ -178,10 +177,10 @@ if uploaded_file is not None:
     # st.pyplot(fig)
 
 
-        with col2:
-            fig_name = "fig{index}.png".format(index=idx)
-            fig.savefig(fig_name)
-            st.image(Image.open(fig_name))
+
+    fig_name = "fig{index}.png".format(index=idx)
+    fig.savefig(fig_name)
+    st.image(Image.open(fig_name))
 
 
    
