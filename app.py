@@ -141,11 +141,7 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
-        fig_name = "fig{index}.png".format(index=idx)
-        fig.savefig(fig_name)
-        st.image(Image.open(fig_name))
 
-        
         with col2:
             fig_name = "fig{index}.png".format(index=idx)
             fig.savefig(fig_name)
@@ -173,12 +169,8 @@ if uploaded_file is not None:
         output = f'Unpacked package volume: {volume_f}\n'
         with col1:
             st.write(output)
-            st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
+            st.write("***************************************************")
+    with col1:
+        st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
 
-
-    # Print the entire output
-    # print(output)
-    # st.title("Packing information:")
-    # st.text(output)
-    #st.pyplot(fig)
 
