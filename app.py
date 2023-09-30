@@ -20,6 +20,12 @@ st.set_page_config(page_title="Codesprint 3D Bin Packer", page_icon=":smiley:")
 
 st.title("Codesprint 3D Bin Packer")
 uploaded_file = st.file_uploader("Choose a file")
+if uploaded_file is not None:
+    # Read the contents of the uploaded file into memory
+    file_contents = uploaded_file.read()
+    # Save the uploaded file's contents to a file named "data.csv"
+    with open("data.csv", "wb") as f:
+        f.write(file_contents)
 if st.button("Open interactive view"):
     file_path = "interactiveplot.py"  # Replace with the path to your Python file
     run_python_file(file_path)
