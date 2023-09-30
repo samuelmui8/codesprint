@@ -3,11 +3,13 @@ import streamlit as st
 import random
 import csv
 import pandas as pd
+import subprocess
 
-
-st.set_page_config(page_title="Streamlit App", page_icon=":smiley:")
-st.title("Codesprint 3D Bin Packer")
-uploaded_file = st.file_uploader("Choose a file")
+st.set_page_config(page_title="Streamlit App", page_icon=":smiley:", layout="wide")
+col1, col2 = st.columns((1,2))
+with col1:
+    st.title("Codesprint 3D Bin Packer")
+    uploaded_file = st.file_uploader("Choose a file")
 
 
 COLORS = ["yellow", "olive", "pink", "brown", "red",
@@ -82,11 +84,28 @@ if uploaded_file is not None:
         number_of_decimals=0
     )
 
+
+
     # put order
     packer.putOrder()
+
+    with col1:
+        st.title("Packing information:")
+
+    # output = "***************************************************\n"
+    # output = ''
     for idx, b in enumerate(packer.bins):
+        # output += f"** {b.string()} **\n"
+        with col1:
+            st.header(f"{b.string()} \n")
         bins_used += 1
         current_bin_weight = 0
+        # output = f"{b.string()} \n"
+        # output += "***************************************************\n"
+        with col1:
+            st.subheader("FITTED ITEMS")
+        output = ""
+        # output += "***************************************************\n"
         volume = b.width * b.height * b.depth
         volume_t = 0
         volume_f = 0
@@ -98,6 +117,7 @@ if uploaded_file is not None:
         }
         for item in b.items:
             current_bin_weight += float(item.weight)
+
             data["Package no"].append(item.partno)
             data["Dimensions / meters"].append(
                 f"{item.width} x {item.height} x {item.depth}")
@@ -113,7 +133,10 @@ if uploaded_file is not None:
             f'{round(volume_t / float(volume) * 100, 2)}%')
         data1["Total weight of items"].append(current_bin_weight)
         data1["Residual volume"].append(float(volume) - volume_t)
+
         # draw results
+        with col1:
+            st.markdown(output)
         painter = Painter(b)
         fig = painter.plotBoxAndItems(
             title=b.partno,
@@ -121,6 +144,7 @@ if uploaded_file is not None:
             write_num=False,
             fontsize=10
         )
+        
         df = pd.DataFrame(data)
         df1 = pd.DataFrame(data1)
         df.index += 1
@@ -152,3 +176,12 @@ if uploaded_file is not None:
     unfitted_items.index += 1
     st.table(unfitted_items)
     # st.pyplot(fig)
+
+
+        with col2:
+            fig_name = "fig{index}.png".format(index=idx)
+            fig.savefig(fig_name)
+            st.image(Image.open(fig_name))
+
+
+   
