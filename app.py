@@ -113,7 +113,7 @@ if uploaded_file is not None:
     for idx, b in enumerate(packer.bins):
 
         st.header(f"{b.string()} \n")
-        bins_used += 1
+
         current_bin_weight = 0
 
         volume = b.width * b.height * b.depth
@@ -141,6 +141,8 @@ if uploaded_file is not None:
         }
         data1["Space utilization"].append(
             f'{round(volume_t / float(volume) * 100, 2)}%')
+        if round(volume_t / float(volume) * 100, 2) != 0.0:
+            bins_used += 1
         data1["Total weight of items / kg"].append(current_bin_weight)
         data1["Residual volume"].append(float(volume) - volume_t)
 
