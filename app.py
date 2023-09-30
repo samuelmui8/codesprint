@@ -16,6 +16,7 @@ def run_python_file(file_path):
     except Exception as e:
         st.error(f"Error executing '{file_path}': {e}")
 
+
 st.set_page_config(page_title="Codesprint 3D Bin Packer", page_icon=":smiley:")
 
 st.title("Codesprint 3D Bin Packer")
@@ -101,43 +102,6 @@ if uploaded_file is not None:
         # put order
         packer.putOrder()
 
-        output = "***************************************************\n"
-        for idx, b in enumerate(packer.bins):
-            output += f"** {b.string()} **\n"
-            bins_used += 1
-            current_bin_weight = 0
-            output += "***************************************************\n"
-            output += "FITTED ITEMS:\n"
-            output += "***************************************************\n"
-            volume = b.width * b.height * b.depth
-            volume_t = 0
-            volume_f = 0
-            unfitted_name = ''
-            for item in b.items:
-                current_bin_weight += float(item.weight)
-                output += f"Package no: {item.partno}, "
-                output += f"Dimensions : {item.width} x {item.height} x {item.depth}, "
-                output += f"Weight : {item.weight}\n"
-                volume_t += float(item.width) * \
-                    float(item.height) * float(item.depth)
-
-            output += f'Space utilization : {round(volume_t / float(volume) * 100, 2)}%\n'
-            output += f'Total weight of items: {current_bin_weight}\n'
-            output += f'Residual volume : {float(volume) - volume_t}\n'
-            output += "***************************************************\n"
-            # draw results
-            painter = Painter(b)
-            fig = painter.plotBoxAndItems(
-                title=b.partno,
-                alpha=0.8,
-                write_num=False,
-                fontsize=10
-            )
-
-
-
-
-
     st.title("Packing information:")
 
     for idx, b in enumerate(packer.bins):
@@ -214,4 +178,3 @@ if uploaded_file is not None:
     unfitted_items = pd.DataFrame(unfitted_items)
     unfitted_items.index += 1
     st.table(unfitted_items)
-
