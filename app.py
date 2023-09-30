@@ -88,20 +88,12 @@ if uploaded_file is not None:
 
     st.title("Packing information:")
 
-    # output = "***************************************************\n"
-    # output = ''
     for idx, b in enumerate(packer.bins):
-        # output += f"** {b.string()} **\n"
 
         st.header(f"{b.string()} \n")
         bins_used += 1
         current_bin_weight = 0
-        # output = f"{b.string()} \n"
-        # output += "***************************************************\n"
 
-        st.subheader("FITTED ITEMS")
-        output = ""
-        # output += "***************************************************\n"
         volume = b.width * b.height * b.depth
         volume_t = 0
         volume_f = 0
@@ -131,8 +123,6 @@ if uploaded_file is not None:
         data1["Residual volume"].append(float(volume) - volume_t)
 
         # draw results
-
-        st.markdown(output)
         painter = Painter(b)
         fig = painter.plotBoxAndItems(
             title=b.partno,
@@ -144,6 +134,7 @@ if uploaded_file is not None:
         df = pd.DataFrame(data)
         df1 = pd.DataFrame(data1)
         df.index += 1
+        st.subheader("FITTED ITEMS")
         st.pyplot(fig)
         st.table(df)
         st.table(df1)
@@ -171,4 +162,3 @@ if uploaded_file is not None:
     unfitted_items = pd.DataFrame(unfitted_items)
     unfitted_items.index += 1
     st.table(unfitted_items)
-    # st.pyplot(fig)
