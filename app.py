@@ -114,12 +114,12 @@ if uploaded_file is not None:
                 float(item.height) * float(item.depth)
         data1 = {
             "Space utilization": [],
-            "Total weight of items": [],
+            "Total weight of items / kg": [],
             "Residual volume": []
         }
         data1["Space utilization"].append(
             f'{round(volume_t / float(volume) * 100, 2)}%')
-        data1["Total weight of items"].append(current_bin_weight)
+        data1["Total weight of items / kg"].append(current_bin_weight)
         data1["Residual volume"].append(float(volume) - volume_t)
 
         # draw results
@@ -134,8 +134,8 @@ if uploaded_file is not None:
         df = pd.DataFrame(data)
         df1 = pd.DataFrame(data1)
         df.index += 1
-        st.subheader("FITTED ITEMS")
         st.pyplot(fig)
+        st.subheader("FITTED ITEMS")
         st.table(df)
         st.table(df1)
 
