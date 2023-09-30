@@ -133,9 +133,8 @@ if uploaded_file is not None:
                 write_num=False,
                 fontsize=10
             )
-            fig_name = "fig{index}.png".format(index=idx)
-            fig.savefig(fig_name)
-            st.image(Image.open(fig_name))
+
+            st.pyplot(fig)
 
 
 
