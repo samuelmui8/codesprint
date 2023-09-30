@@ -94,13 +94,10 @@ if uploaded_file is not None:
         volume_f = 0
         unfitted_name = ''
         for item in b.items:
-            output += f"partno : {item.partno}\n"
-            output += f"position : {item.position}\n"
+            output += f"partno : {item.partno}, "
             output += f"W*H*D : {item.width} * {item.height} * {item.depth}\n"
-            output += f"volume : {float(item.width) * float(item.height) * float(item.depth)}\n"
             volume_t += float(item.width) * \
                 float(item.height) * float(item.depth)
-            output += "***************************************************\n"
 
         output += f'space utilization : {round(volume_t / float(volume) * 100, 2)}%\n'
         output += f'residual volume : {float(volume) - volume_t}\n'
@@ -120,14 +117,9 @@ if uploaded_file is not None:
     output += "***************************************************\n"
     output += "UNFITTED ITEMS:\n"
     for item in packer.unfit_items:
-        output += "***************************************************\n"
-        output += f"partno : {item.partno}\n"
-        output += f"W*H*D : {item.width} * {item.height} * {item.depth}\n"
-        output += f"volume : {float(item.width) * float(item.height) * float(item.depth)}\n"
         volume_f += float(item.width) * \
             float(item.height) * float(item.depth)
         unfitted_name += f'{item.partno},'
-        output += "***************************************************\n"
     output += "***************************************************\n"
     output += f'unpacked items : {unfitted_name}\n'
     output += f'unpacked items volume : {volume_f}\n'
