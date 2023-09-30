@@ -19,6 +19,7 @@ bin_size = -1
 items = []
 item_size = 0
 counter = 0
+bins_used = 0
 
 if uploaded_file is not None:
     # Use uploaded file content instead of hardcoded path
@@ -52,7 +53,7 @@ if uploaded_file is not None:
     packer = Packer()
     #  init bin
     for i in range(len(bins)):
-        box = Bin('Bin{}'.format(str(i+1)), bins[i], 100, 0, 0)
+        box = Bin('Container {}'.format(str(i+1)), bins[i], 100, 0, 0)
         packer.addBin(box)
 
     #  add item
@@ -86,6 +87,7 @@ if uploaded_file is not None:
     output = "***************************************************\n"
     for idx, b in enumerate(packer.bins):
         output += f"** {b.string()} **\n"
+        bins_used += 1
         output += "***************************************************\n"
         output += "FITTED ITEMS:\n"
         output += "***************************************************\n"
@@ -94,8 +96,8 @@ if uploaded_file is not None:
         volume_f = 0
         unfitted_name = ''
         for item in b.items:
-            output += f"partno : {item.partno}, "
-            output += f"W*H*D : {item.width} * {item.height} * {item.depth}\n"
+            output += f"Package no. : {item.partno}, "
+            output += f"Dimensions : {item.width} * {item.height} * {item.depth}\n"
             volume_t += float(item.width) * \
                 float(item.height) * float(item.depth)
 
@@ -126,6 +128,7 @@ if uploaded_file is not None:
 
     # Print the entire output
     print(output)
+    st.text("Containers utilised: " + str(bins_used) + "/" + str(len(bins)))
     st.text("Packing information:")
     st.text(output)
-    #st.pyplot(fig)
+    # st.pyplot(fig)
