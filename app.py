@@ -19,6 +19,8 @@ bin_size = -1
 items = []
 item_size = 0
 counter = 0
+bin_weights = []
+item_weights = []
 
 if uploaded_file is not None:
     # Use uploaded file content instead of hardcoded path
@@ -39,20 +41,20 @@ if uploaded_file is not None:
             else:
                 item_size = num
         else:
-            a = row[0]
-            b = row[1]
-            values = tuple(int(val) for val in row if val)
+            dimensions = tuple(int(val) for val in row[:3])
             if counter > 0:
-                bins.append(values)
+                bins.append(dimensions)
+                bin_weights.append(int(row[3]))
                 counter -= 1
             else:
-                items.append(values)
+                items.append(dimensions)
+                item_weights.append(int(row[3]))
 
     # init packing function
     packer = Packer()
     #  init bin
     for i in range(len(bins)):
-        box = Bin('Bin{}'.format(str(i+1)), bins[i], 100, 0, 0)
+        box = Bin('Bin{}'.format(str(i+1)), bins[i], bin_weights[i], 0, 0)
         packer.addBin(box)
 
     #  add item
@@ -62,13 +64,13 @@ if uploaded_file is not None:
             name='test{}'.format(str(i+1)),
             typeof='cube',
             WHD=items[i],
-            weight=1,
+            weight=item_weights[i],
             level=1,
             loadbear=100,
             updown=True,
             color=random.choice(COLORS)
         )
-        )
+    )
 
     # calculate packing
     packer.pack(
