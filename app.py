@@ -55,13 +55,13 @@ if uploaded_file is not None:
     packer = Packer()
     #  init bin
     for i in range(len(bins)):
-        box = Bin('Bin{}'.format(str(i+1)), bins[i], 100, 0, 0)
+        box = Bin('Container {}'.format(str(i+1)), bins[i], 100, 0, 0)
         packer.addBin(box)
 
     #  add item
     for i in range(len(items)):
         packer.addItem(Item(
-            partno='Box-{}'.format(str(i+1)),
+            partno='{}'.format(str(i+1)),
             name='test{}'.format(str(i+1)),
             typeof='cube',
             WHD=items[i],
@@ -90,6 +90,7 @@ if uploaded_file is not None:
     for idx, b in enumerate(packer.bins):
         output += f"** {b.string()} **\n"
         bins_used += 1
+        current_bin_weight = 0
         output += "***************************************************\n"
         output += "FITTED ITEMS:\n"
         output += "***************************************************\n"
@@ -98,13 +99,16 @@ if uploaded_file is not None:
         volume_f = 0
         unfitted_name = ''
         for item in b.items:
-            output += f"Package no. : {item.partno}, "
-            output += f"Dimensions : {item.width} * {item.height} * {item.depth}\n"
+            current_bin_weight += float(item.weight)
+            output += f"Package no: {item.partno}, "
+            output += f"Dimensions : {item.width} x {item.height} x {item.depth}, "
+            output += f"Weight : {item.weight}\n"
             volume_t += float(item.width) * \
                 float(item.height) * float(item.depth)
 
-        output += f'space utilization : {round(volume_t / float(volume) * 100, 2)}%\n'
-        output += f'residual volume : {float(volume) - volume_t}\n'
+        output += f'Space utilization : {round(volume_t / float(volume) * 100, 2)}%\n'
+        output += f'Total weight of items: {current_bin_weight}\n'
+        output += f'Residual volume : {float(volume) - volume_t}\n'
         output += "***************************************************\n"
         # draw results
         painter = Painter(b)
@@ -123,10 +127,14 @@ if uploaded_file is not None:
     for item in packer.unfit_items:
         volume_f += float(item.width) * \
             float(item.height) * float(item.depth)
-        unfitted_name += f'{item.partno},'
+        unfitted_name += f'{item.partno}, '
+    if len(packer.unfit_items) == 0:
+        unfitted_name = "None"
+    else:
+        unfitted_name = unfitted_name[:-2]
     output += "***************************************************\n"
-    output += f'unpacked items : {unfitted_name}\n'
-    output += f'unpacked items volume : {volume_f}\n'
+    output += f'Unpacked package no: {unfitted_name}\n'
+    output += f'Unpacked package volume : {volume_f}\n'
 
     # Print the entire output
     print(output)
