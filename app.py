@@ -17,9 +17,9 @@ def run_python_file(file_path):
         st.error(f"Error executing '{file_path}': {e}")
 
 
-st.set_page_config(page_title="Codesprint 3D Bin Packer", page_icon=":smiley:")
+st.set_page_config(page_title="EZPack", page_icon=":smiley:")
 
-st.title("Codesprint 3D Bin Packer")
+st.title("EZPack")
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     # Read the contents of the uploaded file into memory
