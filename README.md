@@ -20,7 +20,7 @@ You can use the test csv files in the 'testvals' folder.
 csv file format:
 ```
 <number of containers>,,,
-<container length>,<container width>,<container height>,<container weight
+<container length>,<container width>,<container height>,<container weight limit>
 <number of items>,,,
 <item length>,<item width>,<item height>,<item weight>
 ```
@@ -54,6 +54,9 @@ You can clone this repository and run the following command to run the app local
 ```
 streamlit run app.py
 ```
+
+## Video Demo:
+https://youtu.be/wADoxMlGi3s
 ## Reference
 
 * [Optimizing three-dimensional bin packing through simulation](https://github.com/jerry800416/3dbinpacking/blob/master/reference/OPTIMIZING%20THREE-DIMENSIONAL%20BIN%20PACKING%20THROUGH%20SIMULATION.pdf)
