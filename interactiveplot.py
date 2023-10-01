@@ -1,8 +1,6 @@
 from py3dbp import Packer, Bin, Item, Painter
-import matplotlib.pyplot as plt
 import random
 import csv
-
 
 seed_value = 42
 random.seed(seed_value)

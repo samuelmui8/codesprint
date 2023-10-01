@@ -1,5 +1,3 @@
-import os
-
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
 import random
