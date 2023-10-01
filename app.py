@@ -1,3 +1,5 @@
+import os
+
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
 import random
@@ -15,6 +17,9 @@ def run_python_file(file_path):
     except Exception as e:
         st.error(f"Error executing '{file_path}': {e}")
 
+script_path = "interactiveplot.py"
+current_permissions = os.stat(script_path).st_mode
+st.text(f"Current permissions: {current_permissions:o}")
 
 st.set_page_config(page_title="EZPack", page_icon=":smiley:")
 
