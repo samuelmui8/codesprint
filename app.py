@@ -119,7 +119,6 @@ if uploaded_file is not None:
         volume = b.width * b.height * b.depth
         volume_t = 0
         volume_f = 0
-        unfitted_name = ''
         data = {
             "Package no": [],
             "Dimensions / meters": [],
@@ -141,8 +140,6 @@ if uploaded_file is not None:
         }
         data1["Space utilization"].append(
             f'{round(volume_t / float(volume) * 100, 2)}%')
-        if round(volume_t / float(volume) * 100, 2) != 0.0:
-            bins_used += 1
         data1["Total weight of items / kg"].append(current_bin_weight)
         data1["Residual volume"].append(float(volume) - volume_t)
 
@@ -158,7 +155,9 @@ if uploaded_file is not None:
         df = pd.DataFrame(data)
         df1 = pd.DataFrame(data1)
         df.index += 1
-        st.pyplot(fig)
+        if round(volume_t / float(volume) * 100, 2) != 0.0:
+            bins_used += 1
+            st.pyplot(fig)
         st.subheader("FITTED ITEMS")
         st.table(df)
         st.table(df1)
@@ -173,10 +172,6 @@ if uploaded_file is not None:
         unfitted_items["Dimensions / meters"].append(
             f"{item.width} x {item.height} x {item.depth}")
         unfitted_items["Weight / kg"].append(item.weight)
-    if len(packer.unfit_items) == 0:
-        unfitted_name = "None"
-    else:
-        unfitted_name = unfitted_name[:-2]
 
     # Print the entire output
     st.header("Summary:")
