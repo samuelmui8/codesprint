@@ -1,17 +1,16 @@
-
-
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
 import random
 import csv
 import pandas as pd
 import subprocess
+import sys
 
 
 def run_python_file(file_path):
     try:
         # Execute the Python file using subprocess
-        subprocess.run(["python", file_path], check=True)
+        subprocess.run([f"{sys.executable}", file_path])
         st.success(f"Python file '{file_path}' executed successfully.")
     except Exception as e:
         st.error(f"Error executing '{file_path}': {e}")
