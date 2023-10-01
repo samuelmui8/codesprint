@@ -19,6 +19,9 @@ def run_python_file(file_path):
 
 script_path = "interactiveplot.py"
 current_permissions = os.stat(script_path).st_mode
+if not current_permissions & 0o111:
+    os.chmod(script_path, current_permissions | 0o111)
+    st.text("Execute permissions added.")
 st.text(f"Current permissions: {current_permissions:o}")
 
 st.set_page_config(page_title="EZPack", page_icon=":smiley:")
