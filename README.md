@@ -17,6 +17,37 @@ Upload csv file indicating container and item information.
 
 You can use the test csv files in the 'testvals' folder.
 
+csv file format:
+```
+<number of containers>,,,
+<container length>,<container width>,<container height>,<container weight
+<number of items>,,,
+<item length>,<item width>,<item height>,<item weight>
+```
+Example: 2 containers, 16 items
+```
+2,,,
+6,10,6,50
+5,10,5,50
+16,,,
+5,4,1,1
+1,2,4,1
+1,2,3,1
+1,2,2,1
+1,2,3,1
+1,2,4,1
+1,2,2,1
+1,2,4,1
+1,2,3,1
+1,2,2,1
+5,4,1,1
+1,1,4,1
+1,2,1,1
+1,2,1,1
+1,1,4,1
+5,4,2,51
+```
+
 ## Note
 Interactive view is currently only available on local environment.
 You can clone this repository and run the following command to run the app locally.
