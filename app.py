@@ -1,5 +1,5 @@
 import subprocess
-
+import os
 from py3dbp import Packer, Bin, Item, Painter
 import streamlit as st
 import random
@@ -28,7 +28,10 @@ if uploaded_file is not None:
     with open("data.csv", "wb") as f:
         f.write(file_contents)
 if st.button("Open interactive view"):
-    file_path = "interactiveplot.py"  # Replace with the path to your Python file
+    absolute_path = os.path.dirname(__file__)
+    relative_path = "interactiveplot.py"
+    full_path = os.path.join(absolute_path, relative_path)
+    file_path = full_path  # Replace with the path to your Python file
     run_python_file(file_path)
 
 seed_value = 42
